@@ -1,0 +1,2 @@
+which industry(soc_name) has the most number of data scientist positions?
+select soc_name,count(job_title) as  total from h1b_final where job_title like  "DATA SCIENTIST" group by soc_name order by total desc limit 1; 
