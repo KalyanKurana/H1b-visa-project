@@ -1,0 +1,3 @@
+
+which top 5 employers file the most petitions each year?-Case status all?
+select * from (select *,row_number() over (partition by a.year order by a.cnt desc) as rn from (select year,employer_name,count(employer_name)as cnt from h1b_final group by employer_name,year order by year desc) a) b where b.rn=5;
