@@ -1,0 +1,11 @@
+Find the percentage and the count of each case status on total applications for each year. Create a line graph depicting the pattern of All the cases over the period of time.
+bag1= load 'hdfs://localhost:54310/user/hive/warehouse/project.db/h1b_final' using PigStorage('\t') as (sno:int,casestatus:chararray,employername:chararray,socname:chararray,jobtitle:chararray,fulltime:chararray,wage:int,year:chararray,worksite:chararray,longt:double,lat:double);
+bag2 = group bag1 by year;
+bag3 = foreach bag2 generate FLATTEN(group) as year,COUNT(bag1);
+bag4 = group bag1 by (casestatus,year);
+bag5 = foreach bag4 generate group,COUNT(bag1) as total;
+bag5 = foreach bag5 generate FLATTEN(group),total;
+joined = join bag3 by year,bag5 by year;
+optimized = foreach joined generate $0,$1,$2,$4;
+percentage = foreach optimized generate $0,$2,$3,ROUND_TO(((double)$3/(double)$1)*100,2) as percen;
+dump percentage;
